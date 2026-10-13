@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { cn } from '@/utils/cn'
 import { portraitFor } from '@/data/images'
+import { serverUrl } from '@/utils/apiUrl'
 
 function initials(name: string): string {
   return name
@@ -31,7 +32,7 @@ const sizes = {
 export function Avatar({ name, src, size = 'md', ring, online, className }: AvatarProps) {
   const [failed, setFailed] = useState(false)
   // Sans photo fournie, on retrouve le portrait du coach / membre par son nom.
-  const photo = failed ? undefined : (src ?? portraitFor(name, size === 'lg' || size === 'xl' ? 240 : 120))
+  const photo = failed ? undefined : (serverUrl(src) ?? portraitFor(name, size === 'lg' || size === 'xl' ? 240 : 120))
 
   return (
     <div className={cn('relative shrink-0', sizes[size], className)}>

@@ -46,6 +46,7 @@ import {
   type StartActivityPayload,
   type UpdateActivityPayload,
 } from '../types'
+import { API_ORIGIN } from '@/utils/apiUrl'
 
 const TOKEN_KEY = 'fitlife:token'
 const USER_KEY = 'fitlife:user'
@@ -57,7 +58,7 @@ interface FinishResponse {
 }
 
 class RestAdapter implements DataService {
-  private base = '/api'
+  private base = `${API_ORIGIN}/api`
 
   private token(): string | null {
     return localStorage.getItem(TOKEN_KEY)
