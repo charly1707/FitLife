@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/brand/favicon-64.png" />
+    <link rel="apple-touch-icon" href="/brand/app-icon-512.png" />
+    <link rel="preload" as="image" href="/brand/fitlife-logo.webp" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000503" />
+    <meta
+      name="description"
+      content="FitLife — Plus qu'une application, un véritable accompagnement vers ta meilleure version. Ton corps. Ton alimentation. Ton coach."
+    />
+    <title>FitLife — Ton corps. Ton alimentation. Ton coach.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!--
+      Écran de chargement : affiché immédiatement, pendant que l'application se télécharge.
+      Le logo est « dessiné » trait par trait puis brille ; main.tsx le retire à la fin
+      de l'animation (et une fois l'application prête). Un toucher permet de passer.
+    -->
+    <style>
+      html, body { margin: 0; background: #000503; }
+      #splash {
+        position: fixed; inset: 0; z-index: 9999;
+        display: grid; place-items: center;
+        background: #000503;
+        transition: opacity 0.5s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+      #splash.leaving { opacity: 0; pointer-events: none; }
+      #splash .box { position: relative; width: min(78vw, 420px); aspect-ratio: 1; }
+      #splash svg, #splash .glow { position: absolute; inset: 0; width: 100%; height: 100%; }
+      #splash .hint {
+        position: absolute; bottom: 40px; left: 0; right: 0; margin: 0; text-align: center;
+        font: 500 11px/1 system-ui, sans-serif; letter-spacing: 0.3em; text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.25); opacity: 0; transition: opacity 0.6s ease 1.5s;
+      }
+      #splash.go .hint { opacity: 1; }
+
+      #splash .stroke { stroke-dasharray: 1; stroke-dashoffset: 1; }
+      #splash.go .stroke {
+        animation: splash-draw var(--d) cubic-bezier(0.65, 0, 0.35, 1) var(--t) forwards;
+      }
+      @keyframes splash-draw { to { stroke-dashoffset: 0; } }
+
+      #splash .settle { opacity: 0; }
+      #splash.go .settle { animation: splash-fade 0.4s ease-out 3.25s forwards; }
+      @keyframes splash-fade { to { opacity: 1; } }
+
+      #splash .glow {
+        opacity: 0; mix-blend-mode: screen; pointer-events: none;
+        filter: contrast(2.2) brightness(1.25) saturate(1.5) blur(24px);
+      }
+      #splash.go .glow { animation: splash-glow 1.4s ease-out 3.35s forwards; }
+      @keyframes splash-glow { 0% { opacity: 0; } 40% { opacity: 0.95; } 100% { opacity: 0.45; } }
+
+      #splash .shine-wrap { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+      #splash .shine {
+        position: absolute; top: 0; bottom: 0; left: -50%; width: 50%; opacity: 0;
+        mix-blend-mode: overlay;
+        background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.95) 50%, transparent 80%);
+        transform: skewX(-12deg);
+      }
+      #splash.go .shine { animation: splash-shine 0.9s ease-in-out 3.4s forwards; }
+      @keyframes splash-shine {
+        0% { opacity: 1; transform: translateX(0) skewX(-12deg); }
+        90% { opacity: 1; }
+        100% { opacity: 0; transform: translateX(300%) skewX(-12deg); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #splash.go .stroke { animation: none; stroke-dashoffset: 0; }
+        #splash.go .settle { animation: none; opacity: 1; }
+        #splash.go .glow { animation: none; opacity: 0.4; }
+        #splash .shine { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash" role="presentation" aria-label="Chargement de FitLife">
+      <div class="box">
+        <svg viewBox="0 0 1254 1254" aria-hidden="true">
+          <defs>
+            <mask id="splash-draw" maskUnits="userSpaceOnUse" x="0" y="0" width="1254" height="1254">
+              <rect width="1254" height="1254" fill="black" />
+              <!-- Arc -->
+              <path class="stroke" style="--t: 0.1s; --d: 0.6s" pathLength="1" fill="none" stroke="white" stroke-width="64" stroke-linecap="round" stroke-linejoin="round"
+                d="M632 238 C 520 250, 420 330, 418 440 C 416 500, 432 535, 458 560" />
+              <!-- Tête -->
+              <path class="stroke" style="--t: 0.55s; --d: 0.45s" pathLength="1" fill="none" stroke="white" stroke-width="150" stroke-linecap="round"
+                d="M730 172 A 68 68 0 1 1 729.9 172" />
+              <!-- Bras, buste, jambe arrière -->
+              <path class="stroke" style="--t: 0.85s; --d: 0.7s" pathLength="1" fill="none" stroke="white" stroke-width="78" stroke-linecap="round" stroke-linejoin="round"
+                d="M485 418 L 548 318 L 640 370 L 575 470 L 405 650" />
+              <!-- Jambe avant -->
+              <path class="stroke" style="--t: 1.35s; --d: 0.55s" pathLength="1" fill="none" stroke="white" stroke-width="80" stroke-linecap="round" stroke-linejoin="round"
+                d="M560 470 C 690 470, 770 545, 690 610 C 650 640, 590 630, 520 632" />
+              <!-- Feuille -->
+              <path class="stroke" style="--t: 1.7s; --d: 0.6s" pathLength="1" fill="none" stroke="white" stroke-width="92" stroke-linecap="round" stroke-linejoin="round"
+                d="M880 292 C 780 330, 730 420, 758 548 M 758 548 C 860 470, 895 380, 880 292" />
+              <!-- Nom -->
+              <path class="stroke" style="--t: 2.15s; --d: 0.75s" pathLength="1" fill="none" stroke="white" stroke-width="280" stroke-linecap="round"
+                d="M160 790 L 1100 790" />
+              <!-- Slogan -->
+              <path class="stroke" style="--t: 2.75s; --d: 0.5s" pathLength="1" fill="none" stroke="white" stroke-width="80" stroke-linecap="round"
+                d="M175 958 L 1095 958" />
+            </mask>
+          </defs>
+          <image href="/brand/fitlife-logo.webp" width="1254" height="1254" mask="url(#splash-draw)" />
+          <image class="settle" href="/brand/fitlife-logo.webp" width="1254" height="1254" />
+        </svg>
+        <img class="glow" src="/brand/fitlife-logo.webp" alt="" />
+        <div class="shine-wrap"><div class="shine"></div></div>
+      </div>
+      <p class="hint">Touchez pour passer</p>
+    </div>
+    <script>
+      // Démarre le dessin dès que le logo est chargé (au plus tard après 1,5 s).
+      ;(function () {
+        var splash = document.getElementById('splash')
+        var started = false
+        function go() {
+          if (started) return
+          started = true
+          window.__splashStartedAt = performance.now()
+          splash.classList.add('go')
+        }
+        var img = new Image()
+        img.onload = go
+        img.onerror = go
+        img.src = '/brand/fitlife-logo.webp'
+        if (img.complete) go()
+        setTimeout(go, 1500)
+        splash.addEventListener('click', function () {
+          window.__splashSkip = true
+          if (window.__hideSplash) window.__hideSplash()
+        })
+      })()
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

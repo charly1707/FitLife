@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+backend/.env
+backend/public/uploads/avatars/*
+!backend/public/uploads/avatars/.gitignore
+.DS_Store
