@@ -6,6 +6,9 @@ import { useAuth } from '@/context/AuthContext'
 import { cn } from '@/utils/cn'
 
 // Comptes de démonstration fournis par le mockAdapter / le seed PHP.
+/** Mode démo (données dans le navigateur) : comptes d'essai en un clic. Masqués avec la vraie API. */
+const DEMO_MODE = (import.meta.env.VITE_DATA_MODE ?? 'mock') !== 'api'
+
 const demoAccounts = [
   { label: 'Membre', name: 'Charly Diallo', email: 'demo@fitlife.app', password: 'fitlife' },
   { label: 'Coach', name: 'Coach Awa', email: 'coach@fitlife.app', password: 'coach' },
@@ -16,8 +19,8 @@ const demoAccounts = [
 export function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('demo@fitlife.app')
-  const [password, setPassword] = useState('fitlife')
+  const [email, setEmail] = useState(DEMO_MODE ? 'demo@fitlife.app' : '')
+  const [password, setPassword] = useState(DEMO_MODE ? 'fitlife' : '')
   const [remember, setRemember] = useState(true)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState<string | false>(false)
@@ -100,6 +103,8 @@ export function LoginPage() {
         </Button>
       </form>
 
+      {DEMO_MODE && (
+      <>
       <div className="my-6 flex items-center gap-3 text-[11px] font-medium uppercase tracking-wider text-white/30">
         <span className="h-px flex-1 bg-white/10" />
         Essayer en un clic
@@ -126,6 +131,8 @@ export function LoginPage() {
           </button>
         ))}
       </div>
+      </>
+      )}
 
       <p className="mt-7 text-center text-sm text-white/50">
         Pas encore de compte ?{' '}

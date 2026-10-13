@@ -74,6 +74,16 @@ foreach ($plans as $p) {
     $ins->execute([$p[0], $p[1], $p[2], $p[3], json_encode($p[4], JSON_UNESCAPED_UNICODE), $p[5]]);
 }
 
+// Mots de passe des comptes : variables SEED_*_PASSWORD (fichier .env). En production, jamais de
+// mot de passe par défaut : à défaut de variable, un mot de passe aléatoire est généré et affiché une fois.
+$GLOBALS['seed_credentials'] = [];
+function seed_pw(string $key, string $devDefault): string
+{
+    $pw = env($key) ?? (APP_ENV === 'production' ? rtrim(strtr(base64_encode(random_bytes(12)), '+/', 'Ab'), '=') : $devDefault);
+    $GLOBALS['seed_credentials'][$key] = $pw;
+    return $pw;
+}
+
 // 3) Users (demo / admin / coach / bots)
 function insert_user(PDO $pdo, string $id, string $first, string $last, string $email, string $password, string $birth, string $sex, int $height, float $weight, string $role, int $premium, ?string $plan, string $createdDaysAgo): void
 {
@@ -120,10 +130,10 @@ foreach ($bots as [$id, $first, $last]) {
     $botIdx++;
 }
 
-insert_user($pdo, 'u_charly', 'Charly', 'Diallo', 'demo@fitlife.app', env('SEED_DEMO_PASSWORD') ?? 'fitlife', '1993-05-14', 'male', 180, 78, 'user', 1, 'premium', 90);
-insert_user($pdo, 'u_admin', 'Admin', 'FitLife', 'admin@fitlife.app', env('SEED_ADMIN_PASSWORD') ?? 'admin', '1990-01-01', 'male', 180, 80, 'admin', 1, 'premium', 200);
-insert_user($pdo, 'u_superadmin', 'Super', 'Admin', env('SEED_SUPERADMIN_EMAIL') ?? 'superadmin@fitlife.app', env('SEED_SUPERADMIN_PASSWORD') ?? 'superadmin', '1987-06-15', 'male', 178, 76, 'superadmin', 1, 'premium', 400);
-insert_user($pdo, 'u_coach', 'Coach', 'Awa', 'coach@fitlife.app', env('SEED_COACH_PASSWORD') ?? 'coach', '1988-03-01', 'female', 168, 62, 'coach', 1, 'premium', 300);
+insert_user($pdo, 'u_charly', 'Charly', 'Diallo', 'demo@fitlife.app', seed_pw('SEED_DEMO_PASSWORD', 'fitlife'), '1993-05-14', 'male', 180, 78, 'user', 1, 'premium', 90);
+insert_user($pdo, 'u_admin', 'Admin', 'FitLife', 'admin@fitlife.app', seed_pw('SEED_ADMIN_PASSWORD', 'admin'), '1990-01-01', 'male', 180, 80, 'admin', 1, 'premium', 200);
+insert_user($pdo, 'u_superadmin', 'Super', 'Admin', env('SEED_SUPERADMIN_EMAIL') ?? 'superadmin@fitlife.app', seed_pw('SEED_SUPERADMIN_PASSWORD', 'superadmin'), '1987-06-15', 'male', 178, 76, 'superadmin', 1, 'premium', 400);
+insert_user($pdo, 'u_coach', 'Coach', 'Awa', 'coach@fitlife.app', seed_pw('SEED_COACH_PASSWORD', 'coach'), '1988-03-01', 'female', 168, 62, 'coach', 1, 'premium', 300);
 
 $demoPrefs = [
     'u_charly' => ['weight_loss', 'intermediate', 4, 30, '["none","dumbbells","mat"]', '["Poulet","Riz","Banane"]', 'medium', 4],
@@ -301,4 +311,7 @@ foreach ($menu as $i => $m) {
 
 $pdo->exec('SET FOREIGN_KEY_CHECKS=1');
 echo "Schema + seeds appliqués.\n";
-echo "  Comptes : demo@fitlife.app / fitlife · admin@fitlife.app / admin · superadmin@fitlife.app / superadmin · coach@fitlife.app / coach\n";
+echo "  Comptes : demo@fitlife.app · admin@fitlife.app · " . (env('SEED_SUPERADMIN_EMAIL') ?? 'superadmin@fitlife.app') . " · coach@fitlife.app\n";
+foreach ($GLOBALS['seed_credentials'] as $k => $v) {
+    echo "  $k = " . (env($k) ? '(défini dans .env)' : $v) . "\n";
+}
