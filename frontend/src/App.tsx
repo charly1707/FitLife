@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
 import type { ReactNode } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { Spinner } from '@/components/ui'
@@ -8,30 +9,30 @@ import { AuthLayout } from '@/components/layout/AuthLayout'
 import { LoginPage } from '@/pages/auth/LoginPage'
 import { RegisterPage } from '@/pages/auth/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage'
-import { OnboardingPage } from '@/pages/onboarding/OnboardingPage'
+const OnboardingPage = lazy(() => import('@/pages/onboarding/OnboardingPage').then((m) => ({ default: m.OnboardingPage })))
 import { HomePage } from '@/pages/home/HomePage'
-import { ProgramPage } from '@/pages/program/ProgramPage'
-import { WorkoutSessionPage } from '@/pages/workout/WorkoutSessionPage'
-import { NutritionPage } from '@/pages/nutrition/NutritionPage'
-import { ShoppingListPage } from '@/pages/nutrition/ShoppingListPage'
-import { HydrationPage } from '@/pages/nutrition/HydrationPage'
-import { ActivityPage } from '@/pages/activity/ActivityPage'
-import { LeaderboardPage } from '@/pages/leaderboard/LeaderboardPage'
-import { ChallengesPage } from '@/pages/challenges/ChallengesPage'
-import { BadgesPage } from '@/pages/badges/BadgesPage'
-import { LivesPage } from '@/pages/lives/LivesPage'
-import { LiveRoomPage } from '@/pages/lives/LiveRoomPage'
-import { CommunityPage } from '@/pages/community/CommunityPage'
-import { CoachAiPage } from '@/pages/coach/CoachAiPage'
-import { ProgressPage } from '@/pages/progress/ProgressPage'
-import { ProfilePage } from '@/pages/profile/ProfilePage'
-import { PremiumPage } from '@/pages/premium/PremiumPage'
-import { NotificationsPage } from '@/pages/notifications/NotificationsPage'
-import { AdminPage } from '@/pages/admin/AdminPage'
-import { ManagementPage } from '@/pages/management/ManagementPage'
-import { SuperAdminPage } from '@/pages/superadmin/SuperAdminPage'
-import { EventsPage } from '@/pages/events/EventsPage'
-import { HelpPage } from '@/pages/help/HelpPage'
+const ProgramPage = lazy(() => import('@/pages/program/ProgramPage').then((m) => ({ default: m.ProgramPage })))
+const WorkoutSessionPage = lazy(() => import('@/pages/workout/WorkoutSessionPage').then((m) => ({ default: m.WorkoutSessionPage })))
+const NutritionPage = lazy(() => import('@/pages/nutrition/NutritionPage').then((m) => ({ default: m.NutritionPage })))
+const ShoppingListPage = lazy(() => import('@/pages/nutrition/ShoppingListPage').then((m) => ({ default: m.ShoppingListPage })))
+const HydrationPage = lazy(() => import('@/pages/nutrition/HydrationPage').then((m) => ({ default: m.HydrationPage })))
+const ActivityPage = lazy(() => import('@/pages/activity/ActivityPage').then((m) => ({ default: m.ActivityPage })))
+const LeaderboardPage = lazy(() => import('@/pages/leaderboard/LeaderboardPage').then((m) => ({ default: m.LeaderboardPage })))
+const ChallengesPage = lazy(() => import('@/pages/challenges/ChallengesPage').then((m) => ({ default: m.ChallengesPage })))
+const BadgesPage = lazy(() => import('@/pages/badges/BadgesPage').then((m) => ({ default: m.BadgesPage })))
+const LivesPage = lazy(() => import('@/pages/lives/LivesPage').then((m) => ({ default: m.LivesPage })))
+const LiveRoomPage = lazy(() => import('@/pages/lives/LiveRoomPage').then((m) => ({ default: m.LiveRoomPage })))
+const CommunityPage = lazy(() => import('@/pages/community/CommunityPage').then((m) => ({ default: m.CommunityPage })))
+const CoachAiPage = lazy(() => import('@/pages/coach/CoachAiPage').then((m) => ({ default: m.CoachAiPage })))
+const ProgressPage = lazy(() => import('@/pages/progress/ProgressPage').then((m) => ({ default: m.ProgressPage })))
+const ProfilePage = lazy(() => import('@/pages/profile/ProfilePage').then((m) => ({ default: m.ProfilePage })))
+const PremiumPage = lazy(() => import('@/pages/premium/PremiumPage').then((m) => ({ default: m.PremiumPage })))
+const NotificationsPage = lazy(() => import('@/pages/notifications/NotificationsPage').then((m) => ({ default: m.NotificationsPage })))
+const AdminPage = lazy(() => import('@/pages/admin/AdminPage').then((m) => ({ default: m.AdminPage })))
+const ManagementPage = lazy(() => import('@/pages/management/ManagementPage').then((m) => ({ default: m.ManagementPage })))
+const SuperAdminPage = lazy(() => import('@/pages/superadmin/SuperAdminPage').then((m) => ({ default: m.SuperAdminPage })))
+const EventsPage = lazy(() => import('@/pages/events/EventsPage').then((m) => ({ default: m.EventsPage })))
+const HelpPage = lazy(() => import('@/pages/help/HelpPage').then((m) => ({ default: m.HelpPage })))
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PremiumGate } from '@/components/domain/PremiumGate'
 import { isAdmin, isStaff, isSuperAdmin } from '@/utils/roles'
@@ -72,6 +73,7 @@ function PublicOnly({ children }: { children: ReactNode }) {
 
 export default function App() {
   return (
+    <Suspense fallback={<FullScreenLoader />}>
     <Routes>
       <Route
         element={
@@ -151,5 +153,6 @@ export default function App() {
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
+    </Suspense>
   )
 }

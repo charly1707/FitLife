@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
+import { Spinner } from '@/components/ui'
 import { Sidebar } from './Sidebar'
 import { MobileHeader } from './MobileHeader'
 import { BottomNavigation } from './BottomNavigation'
@@ -26,7 +27,9 @@ export function AppLayout() {
           key={pathname}
           className="animate-fade-in mx-auto w-full max-w-3xl flex-1 px-4 pb-32 pt-4 lg:max-w-5xl lg:px-8 lg:pb-12 lg:pt-8"
         >
-          <Outlet />
+          <Suspense fallback={<Spinner />}>
+            <Outlet />
+          </Suspense>
         </main>
         <ActiveSessionBanner />
         <BottomNavigation />

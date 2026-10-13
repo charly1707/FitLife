@@ -9,6 +9,18 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    // Bibliothèques séparées de l'application : mises en cache indépendamment, pages chargées à la demande.
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router-dom'],
+          charts: ['recharts'],
+          icons: ['lucide-react'],
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     proxy: {
